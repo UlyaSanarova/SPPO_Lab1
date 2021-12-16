@@ -3,7 +3,7 @@
 
 #include "company.h"
 
-// Класс "Строительное предприятие"
+// Класс "Консалтинговое предприятие"
 class ConsultingCompany : public Company
 {
 public:
