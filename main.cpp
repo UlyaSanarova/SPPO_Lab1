@@ -6,6 +6,24 @@
 
 using namespace std;
 
+void printCompanyType(Company::Type type)
+{
+    switch (type) {
+    case Company::TypeBuilding:
+        printf("Building");
+        break;
+    case Company::TypeIT:
+        printf("IT");
+        break;
+    case Company::TypeConsulting:
+        printf("Consulting");
+        break;
+    default:
+        printf("<unknown>");
+        break;
+    }
+}
+
 void printCompany(const Company &company)
 {
     printf("Company '%s'\n", company.getName().toStdString().data());
@@ -27,20 +45,8 @@ void printCompany(const Company &company)
     printf("     Square: %.4f\n", company.getSquare());
     printf("  Employess: %d\n", company.getEmployeesCount());
     printf("       Type: ");
-    switch (company.getType()) {
-    case Company::TypeBuilding:
-        printf("Building\n");
-        break;
-    case Company::TypeIT:
-        printf("IT\n");
-        break;
-    case Company::TypeConsulting:
-        printf("Consulting\n");
-        break;
-    default:
-        printf("<unknown>\n");
-        break;
-    }
+    printCompanyType(company.getType());
+    printf("\n");
     printf("        Tax: %.4f\n", company.getTax());
 }
 
@@ -51,6 +57,13 @@ void fillRegistry()
     shared_ptr<Company> company = make_shared<BuildingCompany>();
     company->setEmployeesCount(10);
     company->addOwner("John");
+    company->setSquare(100);
+    reg->add(company);
+
+    company = make_shared<BuildingCompany>("BuildPro");
+    company->setEmployeesCount(100);
+    company->setIncome(10000);
+    company->addOwner("Carl");
     reg->add(company);
 
     company = make_shared<ITCompany>();
@@ -108,6 +121,38 @@ void printByOwner(const QString &owner) {
     }
 }
 
+void printAverageIncomeSquareEmployees()
+{
+    map<Company::Type, double> incomes, squares;
+    map<Company::Type, int> employeesCounts, companiesCounts;
+
+    auto reg = Registry::getInstance();
+    for (int i = 0; i < reg->getCount(); i++) {
+        auto company = reg->get(i);
+        auto type = company->getType();
+        incomes[type] += company->getIncome();
+        squares[type] += company->getSquare();
+        employeesCounts[type] += company->getEmployeesCount();
+        companiesCounts[type]++;
+    }
+
+    auto companyTypes = QList<Company::Type>() << Company::TypeBuilding << Company::TypeIT << Company::TypeConsulting;
+    for (const auto &type : companyTypes) {
+        int count = companiesCounts[type];
+        if (count != 0) {
+            double in = incomes[type] / count;
+            double sq = squares[type] / count;
+            double employeesCount = double(employeesCounts[type]) / count;
+            printf("Company type: ");
+            printCompanyType(type);
+            printf("\n");
+            printf("     Avg. Income: %.4f\n", in);
+            printf("     Avg. Square: %.4f\n", sq);
+            printf("  Avg. Employees: %.4f\n", employeesCount);
+            printf("\n");
+        }
+    }
+}
 
 int main()
 {
@@ -137,6 +182,10 @@ int main()
         printf("Robert's Companies {\n\n");
         printByOwner("Robert");
         printf("} // Robert's Companies\n\n");
+
+        printf("Statistics {\n\n");
+        printAverageIncomeSquareEmployees();
+        printf("} // Statistics\n\n");
     } catch (const std::exception &err) {
         printf("error: %s\n", err.what());
         Registry::destroy();
