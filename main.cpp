@@ -6,6 +6,44 @@
 
 using namespace std;
 
+void printCompany(const Company &company)
+{
+    printf("Company '%s'\n", company.getName().toStdString().data());
+    auto owners = company.getOwners();
+    if (!owners.empty()) {
+        printf("     Owners: ");
+        for (int i = 0; i < owners.size(); i++) {
+            if (i > 0) {
+                if(i == owners.size() - 1)
+                    printf(" and ");
+                else
+                    printf(", ");
+            }
+            printf("'%s'", owners.at(i).toStdString().data());
+        }
+        printf("\n");
+    }
+    printf("     Income: %.2f\n", company.getIncome());
+    printf("     Square: %.4f\n", company.getSquare());
+    printf("  Employess: %d\n", company.getEmployeesCount());
+    printf("       Type: ");
+    switch (company.getType()) {
+    case Company::TypeBuilding:
+        printf("Building\n");
+        break;
+    case Company::TypeIT:
+        printf("IT\n");
+        break;
+    case Company::TypeConsulting:
+        printf("Consulting\n");
+        break;
+    default:
+        printf("<unknown>\n");
+        break;
+    }
+    printf("        Tax: %.4f\n", company.getTax());
+}
+
 void fillRegistry()
 {
     auto reg = Registry::getInstance();
@@ -35,24 +73,27 @@ void fillRegistry()
     reg->add(company);
 }
 
-void printAllTax()
+void printAll()
 {
     auto reg = Registry::getInstance();
     for (int i = 0; i < reg->getCount(); i++) {
         auto company = reg->get(i);
-        cout << "Tax for company '" << company->getName().toStdString() << "' = " << company->getTax() << endl;
+        printCompany(*company);
+        printf("\n");
     }
 }
 
 int main()
 {
     try {
-        cout << "Filling registry..." << endl;
         fillRegistry();
-        cout << "Calculating tax..." << endl;
-        printAllTax();
-        cout << "Success!!!" << endl;
+        printAll();
+    } catch (const std::exception &err) {
+        printf("error: %s\n", err.what());
+        Registry::destroy();
+        return 1;
     } catch (...) {
+        printf("unknown error\n");
         Registry::destroy();
         return 1;
     }
