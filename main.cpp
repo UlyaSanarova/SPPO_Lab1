@@ -2,33 +2,59 @@
 #include "buildingcompany.h"
 #include "itcompany.h"
 #include "consultingcompany.h"
+#include "registry.h"
 
 using namespace std;
 
+void fillRegistry()
+{
+    auto reg = Registry::getInstance();
+
+    shared_ptr<Company> company = make_shared<BuildingCompany>();
+    company->setEmployeesCount(10);
+    company->addOwner("John");
+    reg->add(company);
+
+    company = make_shared<ITCompany>();
+    company->setEmployeesCount(100);
+    company->setIncome(10000);
+    company->setOwners(QList<QString>() << "John" << "Carl");
+    reg->add(company);
+
+    company = make_shared<ConsultingCompany>();
+    company->setEmployeesCount(10);
+    company->setIncome(999999);
+    company->setSquare(100);
+    company->setOwners(QList<QString>() << "John" << "Carl" << "Tom");
+    reg->add(company);
+
+    company = make_shared<ConsultingCompany>("Consultation+");
+    company->setEmployeesCount(100);
+    company->setIncome(10000);
+    company->setSquare(100);
+    reg->add(company);
+}
+
+void printAllTax()
+{
+    auto reg = Registry::getInstance();
+    for (int i = 0; i < reg->getCount(); i++) {
+        auto company = reg->get(i);
+        cout << "Tax for company '" << company->getName().toStdString() << "' = " << company->getTax() << endl;
+    }
+}
+
 int main()
 {
-    BuildingCompany myCompany;
-    myCompany.setEmployeesCount(10);
-    myCompany.addOwner("John");
-    cout << "Tax for company '" << myCompany.getName().toStdString() << "' = " << myCompany.getTax() << endl;
-
-    ITCompany myCompany2;
-    myCompany2.setEmployeesCount(100);
-    myCompany2.setIncome(10000);
-    myCompany2.setOwners(QList<QString>() << "John" << "Carl");
-    cout << "Tax for company '" << myCompany2.getName().toStdString() << "' = " << myCompany2.getTax() << endl;
-
-    ConsultingCompany myCompany3;
-    myCompany3.setEmployeesCount(10);
-    myCompany3.setIncome(999999);
-    myCompany3.setSquare(100);
-    myCompany3.setOwners(QList<QString>() << "John" << "Carl" << "Tom");
-    cout << "Tax for company '" << myCompany3.getName().toStdString() << "' = " << myCompany3.getTax() << endl;
-
-    ConsultingCompany myCompany4("Consultation+");
-    myCompany4.setEmployeesCount(100);
-    myCompany4.setIncome(10000);
-    myCompany4.setSquare(100);
-    cout << "Tax for company '" << myCompany4.getName().toStdString() << "' = " << myCompany4.getTax() << endl;
+    try {
+        cout << "Filling registry..." << endl;
+        fillRegistry();
+        cout << "Calculating tax..." << endl;
+        printAllTax();
+        cout << "Success!!!" << endl;
+    } catch (...) {
+        Registry::destroy();
+        return 1;
+    }
     return 0;
 }

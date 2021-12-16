@@ -8,10 +8,12 @@ SOURCES += \
         company.cpp \
         consultingcompany.cpp \
         itcompany.cpp \
-        main.cpp
+        main.cpp \
+        registry.cpp
 
 HEADERS += \
     buildingcompany.h \
     company.h \
     consultingcompany.h \
-    itcompany.h
+    itcompany.h \
+    registry.h
