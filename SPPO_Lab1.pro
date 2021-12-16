@@ -6,8 +6,10 @@ CONFIG -= gui
 SOURCES += \
         buildingcompany.cpp \
         company.cpp \
+        itcompany.cpp \
         main.cpp
 
 HEADERS += \
     buildingcompany.h \
-    company.h
+    company.h \
+    itcompany.h
