@@ -4,8 +4,10 @@ CONFIG -= app_bundle
 CONFIG -= gui
 
 SOURCES += \
+        buildingcompany.cpp \
         company.cpp \
         main.cpp
 
 HEADERS += \
+    buildingcompany.h \
     company.h

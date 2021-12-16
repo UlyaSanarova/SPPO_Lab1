@@ -26,6 +26,7 @@ public:
 
     enum Type
     {
+        TypeBuilding
     };
     virtual Type getType() const = 0;
 
