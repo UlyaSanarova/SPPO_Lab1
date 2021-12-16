@@ -97,6 +97,18 @@ void printByType(Company::Type type)
     }
 }
 
+void printByOwner(const QString &owner) {
+    auto reg = Registry::getInstance();
+    for (int i = 0; i < reg->getCount(); i++) {
+        auto company = reg->get(i);
+        if (company->getOwners().contains(owner)) {
+            printCompany(*company);
+            printf("\n");
+        }
+    }
+}
+
+
 int main()
 {
     try {
@@ -113,6 +125,18 @@ int main()
         printf("Consulting Companies {\n\n");
         printByType(Company::TypeConsulting);
         printf("} // Consulting Companies\n\n");
+
+        printf("Carl's Companies {\n\n");
+        printByOwner("Carl");
+        printf("} // Carl's Companies\n\n");
+
+        printf("Tom's Companies {\n\n");
+        printByOwner("Tom");
+        printf("} // Tom's Companies\n\n");
+
+        printf("Robert's Companies {\n\n");
+        printByOwner("Robert");
+        printf("} // Robert's Companies\n\n");
     } catch (const std::exception &err) {
         printf("error: %s\n", err.what());
         Registry::destroy();
