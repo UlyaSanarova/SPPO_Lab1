@@ -85,11 +85,34 @@ void printAll()
     }
 }
 
+void printByType(Company::Type type)
+{
+    auto reg = Registry::getInstance();
+    for (int i = 0; i < reg->getCount(); i++) {
+        auto company = reg->get(i);
+        if (company->getType() == type) {
+            printCompany(*company);
+            printf("\n");
+        }
+    }
+}
+
 int main()
 {
     try {
         fillRegistry();
+
+        printf("All companies {\n\n");
         printAll();
+        printf("} // All companies\n\n");
+
+        printf("IT Companies {\n\n");
+        printByType(Company::TypeIT);
+        printf("} // IT Companies \n\n");
+
+        printf("Consulting Companies {\n\n");
+        printByType(Company::TypeConsulting);
+        printf("} // Consulting Companies\n\n");
     } catch (const std::exception &err) {
         printf("error: %s\n", err.what());
         Registry::destroy();
