@@ -23,6 +23,8 @@ void Registry::destroy()
 
 void Registry::add(const std::shared_ptr<Company> &company)
 {
+    if (!company)
+        return;
     for (const auto &c : m_companies) {
         if (c == company)
             return;

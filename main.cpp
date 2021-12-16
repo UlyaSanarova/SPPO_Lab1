@@ -59,6 +59,8 @@ void fillRegistry()
     company->setOwners(QList<QString>() << "John" << "Carl");
     reg->add(company);
 
+    reg->add(shared_ptr<Company>());
+
     company = make_shared<ConsultingCompany>();
     company->setEmployeesCount(10);
     company->setIncome(999999);
